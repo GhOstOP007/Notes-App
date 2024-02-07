@@ -1,0 +1,82 @@
+button{
+    background: none;
+    border: 0;
+    margin: 0;
+    padding: 2px;
+    cursor: pointer;
+    color: white;
+    font-family: Poppins;
+    font-size: inherit;
+    transition: 0.4s ease-in-out;
+    border-radius: 50px;
+  }
+  button:hover {
+    color: #662549
+
+  } 
+
+  .btnadd {
+    background: #e8bcb9;
+    margin: 8px;
+    font-size: 1.5rem;
+    width: 80%;
+    font-weight: 500;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btnadd:hover {
+    opacity: 50%;
+  }
+  /* SIDEBAR STYLES */
+
+.app-sidebar {
+    width: 30%;
+    height: 100vh;
+    border-right: 1px solid #ddd;
+  }
+  
+  .app-sidebar-notes {
+    height: calc(100vh - 78px);
+    overflow-y: scroll;
+    background: #662549;
+  }
+  .app-sidebar-note {
+    padding: 25px;
+    cursor: pointer;
+  }
+  .sidebar-note-title {
+    display: flex;
+    color: #1d1a39;
+    justify-content: space-between;
+    transition: 0.1s ease-in-out;
+  }
+  .app-sidebar-note button {
+    color: crimson;
+    background: #fbe4db;
+    transition: 0.1s;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  .app-sidebar-note button:hover {
+    background: crimson;
+    color: white;
+  }
+  .app-sidebar-note p {
+    margin: 10px 0;
+    color: #ae445a;
+  }
+  .app-sidebar-note small {
+    display: block;
+    color: #999;
+  }
+  
+  .app-sidebar-note:hover {
+    background: #e8bcb9;
+  }
+  .app-sidebar-note.active,
+  .app-sidebar-note.active small {
+    background: #e8bcb9;
+    color: white;
+  }
