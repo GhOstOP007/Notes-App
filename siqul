@@ -1,0 +1,3214 @@
+index html
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Login - Star Protect Insurance</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+
+    body {
+
+      background: linear-gradient(135deg, #1c3643, #0f2027);
+
+      background-size: cover;
+
+      background-repeat: no-repeat;
+
+      min-height: 100vh;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+    }
+
+
+
+    .glass {
+
+      background: rgba(255, 255, 255, 0.08);
+
+      backdrop-filter: blur(12px);
+
+      border-radius: 16px;
+
+      border: 1px solid rgba(255, 255, 255, 0.1);
+
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+      display: flex;
+
+    }
+
+
+
+    .bg-cover {
+
+      flex: 1;
+
+      overflow: hidden;
+
+    }
+
+
+
+    .bg-cover img {
+
+      width: 100%;
+
+      height: 100%;
+
+      object-fit: cover;
+
+      border-radius: 16px 0 0 16px;
+
+      display: block;
+
+    }
+
+
+
+    .form-container {
+
+      flex: 1;
+
+      padding: 2rem;
+
+    }
+
+
+
+    .company-header {
+
+      display: flex;
+
+      align-items: center;
+
+      margin-bottom: 2rem;
+
+    }
+
+
+
+    .company-logo {
+
+      width: 50px; /* Adjust logo size */
+
+      height: 50px; /* Adjust logo size */
+
+      margin-right: 1rem;
+
+      border-radius: 50%; /* Optional: round the logo */
+
+      overflow: hidden;
+
+    }
+
+
+
+    .company-logo img {
+
+      width: 100%;
+
+      height: 100%;
+
+      object-fit: cover;
+
+    }
+
+  </style>
+
+</head>
+
+<body class="text-white">
+
+
+
+  <div class="glass w-[90%] max-w-[800px]">
+
+    <div class="bg-cover">
+
+      <img src="assets/cover.jpg" alt="Vehicle Protection">
+
+    </div>
+
+
+
+    <div class="form-container">
+
+      <div class="company-header">
+
+        <div class="company-logo">
+
+          <img src="assets/logo.png" alt="Star Protect Insurance Logo">
+
+        </div>
+
+        <h1 class="text-2xl font-semibold">Star Protect Insurance</h1>
+
+      </div>
+
+
+
+      <h2 class="text-3xl font-semibold text-center mb-8">Login</h2>
+
+      <form id="loginForm">
+
+        <label class="block mb-2">User Type</label>
+
+        <select id="userType" class="w-full p-3 mb-4 rounded-md bg-gray-700 border border-gray-600">
+
+          <option value="admin">Admin</option>
+
+          <option value="underwriter">Underwriter</option>
+
+        </select>
+
+
+
+        <label class="block mb-2">User ID</label>
+
+        <input type="text" id="userId" class="w-full p-3 mb-4 rounded-md bg-gray-700 border border-gray-600" required>
+
+
+
+        <label class="block mb-2">Password</label>
+
+        <input type="password" id="password" class="w-full p-3 mb-6 rounded-md bg-gray-700 border border-gray-600" required>
+
+
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-md transition duration-300">Login</button>
+
+      </form>
+
+      <p id="errorMessage" class="text-red-500 text-center mt-4 hidden">Invalid credentials. Please try again.</p>
+
+    </div>
+
+  </div>
+
+
+
+  <script src="index.js"></script>
+
+</body>
+
+</html>
+
+
+
+index.js
+
+document.getElementById("loginForm").addEventListener("submit", function (event) {
+
+  event.preventDefault();
+
+
+
+  const userType = document.getElementById("userType").value;
+
+  const userId = document.getElementById("userId").value;
+
+  const password = document.getElementById("password").value;
+
+  const errorMessage = document.getElementById("errorMessage");
+
+
+
+  const appData = JSON.parse(localStorage.getItem("appData")) || { users: {}, underwriters: [] };
+
+  const users = appData.users;
+
+
+
+  let isAuthenticated = false;
+
+
+
+  if (users[userId] && users[userId].userType === userType && users[userId].password === password) {
+
+    isAuthenticated = true;
+
+    if (userType === "admin") {
+
+      window.location.href = "admin.html";
+
+    } else if (userType === "underwriter") {
+
+      window.location.href = "user.html";
+
+    }
+
+  }
+
+
+
+  if (!isAuthenticated) {
+
+    errorMessage.classList.remove("hidden");
+
+  }
+
+});
+
+
+
+//initial setup of user data, if there is none.
+
+if (!localStorage.getItem("appData")) {
+
+  const initialAppData = {
+
+    users: {
+
+      "admin": { "userId": "admin", "password": "admin123", "userType": "admin" },
+
+      "underwriter1": { "userId": "uw1", "password": "uwpass", "userType": "underwriter" }
+
+    },
+
+    underwriters: [],
+
+    vehiclePolicies:[]
+
+  };
+
+  localStorage.setItem("appData", JSON.stringify(initialAppData));
+
+}
+
+
+
+admin.html
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin Dashboard - Star Protect Insurance</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+
+    body {
+
+      display: flex;
+
+      flex-direction: column;
+
+      min-height: 100vh;
+
+    }
+
+    #mainContent {
+
+      flex-grow: 1;
+
+    }
+
+    .footer-bg {
+
+      background: linear-gradient(135deg, #1c3643, #0f2027);
+
+    }
+
+
+
+    .dashboard-section {
+
+      display: none;
+
+    }
+
+
+
+    .dashboard-section.active {
+
+      display: block;
+
+    }
+
+  </style>
+
+</head>
+
+
+
+<body class="bg-gray-100 flex">
+
+  <!-- Sidebar -->
+
+  <aside id="sidebar"
+
+    class="w-64 bg-white shadow-md h-screen fixed left-0 top-0 z-40 transition-all duration-300 ease-in-out">
+
+    <div class="p-4 border-b flex justify-between items-center">
+
+      <div class="flex items-center">
+
+        <img src="assets/logo.png" alt="Star Protect Insurance Logo" class="h-10 mr-2">
+
+        <span id="sidebarTitle" class="text-xl font-semibold text-gray-800 transition-opacity duration-300">Star
+
+          Protect</span>
+
+      </div>
+
+      <button id="sidebarToggle" class="p-2 focus:outline-none">
+
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+
+          stroke="currentColor">
+
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+            d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+
+        </svg>
+
+      </button>
+
+    </div>
+
+    <nav class="p-4">
+
+      <ul id="sidebarMenu" class="space-y-2">
+
+        <li>
+
+          <a href="#" data-section="dashboard"
+
+            class="sidebar-menu-item flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg group">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+
+            </svg>
+
+            <span class="sidebar-text">Dashboard</span>
+
+          </a>
+
+        </li>
+
+        <li>
+
+          <a href="#" data-section="register"
+
+            class="sidebar-menu-item flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg group">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+
+            </svg>
+
+            <span class="sidebar-text">Register Underwriter</span>
+
+          </a>
+
+        </li>
+
+        <li>
+
+          <a href="#" data-section="search"
+
+            class="sidebar-menu-item flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg group">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+
+            </svg>
+
+            <span class="sidebar-text">Search Underwriter</span>
+
+          </a>
+
+        </li>
+
+        <li>
+
+          <a href="#" data-section="update"
+
+            class="sidebar-menu-item flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg group">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+
+            </svg>
+
+            <span class="sidebar-text">Update Password</span>
+
+          </a>
+
+        </li>
+
+        <li>
+
+          <a href="#" data-section="delete"
+
+            class="sidebar-menu-item flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg group">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+
+            </svg>
+
+            <span class="sidebar-text">Delete Underwriter</span>
+
+          </a>
+
+        </li>
+
+        <li>
+
+          <a href="#" data-section="view-all"
+
+            class="sidebar-menu-item flex items-center p-2 text-gray-600 hover:bg-gray-100 rounded-lg group">
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24"
+
+              stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+
+                d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+
+            </svg>
+
+            <span class="sidebar-text">View All Underwriters</span>
+
+          </a>
+
+        </li>
+
+      </ul>
+
+    </nav>
+
+  </aside>
+
+
+
+  <div id="mainContent" class="ml-64 flex-1 transition-all duration-300 ease-in-out">
+
+    <header class="bg-white shadow-md">
+
+      <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+
+        <div class="flex items-center">
+
+          <h1 id="pageTitle" class="text-2xl font-semibold text-gray-800">Administrator Dashboard</h1>
+
+        </div>
+
+        <nav class="space-x-4">
+
+          <a href="#" class="text-gray-600 hover:text-gray-800">Home</a>
+
+        </nav>
+
+      </div>
+
+    </header>
+
+
+
+    <main class="container mx-auto p-4 py-8">
+
+      <div id="dashboardSection" class="dashboard-section active">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+
+            <h3 class="text-lg font-semibold mb-4">Total Underwriters</h3>
+
+            <p class="text-3xl font-bold text-blue-600">50</p>
+
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+
+            <h3 class="text-lg font-semibold mb-4">Registered This Month</h3>
+
+            <p class="text-3xl font-bold text-green-600">12</p>
+
+          </div>
+
+          <div class="bg-white p-6 rounded-lg shadow-md">
+
+            <h3 class="text-lg font-semibold mb-4">Active Underwriters</h3>
+
+            <p class="text-3xl font-bold text-purple-600">45</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div id="underwriterForm" class="hidden bg-white p-4 rounded shadow-md mt-6">
+
+        <h3 class="text-xl font-semibold mb-4">Register New Underwriter</h3>
+
+        <form id="newUnderwriterForm">
+
+          <div class="mb-4">
+
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="underwriterId">Underwriter
+
+              ID</label>
+
+            <input type="text" id="underwriterId"
+
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+              readonly>
+
+          </div>
+
+          <div class="mb-4">
+
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Name</label>
+
+            <input type="text" id="name"
+
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+              maxlength="50" required>
+
+          </div>
+
+          <div class="mb-4">
+
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="dob">Date of Birth</label>
+
+            <input type="date" id="dob"
+
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+              required>
+
+          </div>
+
+          <div class="mb-4">
+
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="joiningDate">Joining Date</label>
+
+            <input type="date" id="joiningDate"
+
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+              required>
+
+          </div>
+
+          <div class="mb-4">
+
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="defaultPassword">Default
+
+              Password</label>
+
+            <input type="text" id="defaultPassword"
+
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+              required>
+
+          </div>
+
+          <button type="submit"
+
+            class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded">Save</button>
+
+          <button type="button" id="cancelUnderwriterBtn"
+
+            class="bg-gray-400 hover:bg-gray-500 text-white py-2 px-4 rounded">Cancel</button>
+
+        </form>
+
+      </div>
+
+
+
+      <div id="searchUnderwriterDiv" class="hidden bg-white p-4 rounded shadow-md mt-6">
+
+        <h3 class="text-xl font-semibold mb-4">Search Underwriter by ID</h3>
+
+        <input type="text" id="searchId"
+
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+          placeholder="Underwriter ID">
+
+        <button id="performSearchBtn"
+
+          class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mt-2">Search</button>
+
+        <div id="searchResults" class="mt-4"></div>
+
+      </div>
+
+
+
+      <div id="updatePasswordDiv" class="hidden bg-white p-4 rounded shadow-md mt-6">
+
+        <h3 class="text-xl font-semibold mb-4">Update Underwriter Password</h3>
+
+        <input type="text" id="updateId"
+
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+          placeholder="Underwriter ID">
+
+        <input type="password" id="newPassword"
+
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mt-2"
+
+          placeholder="New Password">
+
+        <button id="performUpdateBtn"
+
+          class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded mt-2">Update</button>
+
+      </div>
+
+
+
+      <div id="deleteUnderwriterDiv" class="hidden bg-white p-4 rounded shadow-md mt-6">
+
+        <h3 class="text-xl font-semibold mb-4">Delete Underwriter by ID</h3>
+
+        <input type="text" id="deleteId"
+
+          class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+          placeholder="Underwriter ID">
+
+        <button id="performDeleteBtn"
+
+          class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded mt-2">Delete</button>
+
+      </div>
+
+
+
+      <!-- View All Underwriters Section -->
+
+      <div id="viewAllSection" class="dashboard-section hidden">
+
+        <div id="viewAllUnderwritersDiv" class="bg-white p-4 rounded shadow-md mt-6">
+
+          <h3 class="text-xl font-semibold mb-4">All Underwriters</h3>
+
+          <table class="min-w-full bg-white border border-gray-300 rounded">
+
+            <thead>
+
+              <tr>
+
+                <th class="py-2 px-4 border-b">ID</th>
+
+                <th class="py-2 px-4 border-b">Name</th>
+
+                <th class="py-2 px-4 border-b">DOB</th>
+
+                <th class="py-2 px-4 border-b">Joining Date</th>
+
+              </tr>
+
+            </thead>
+
+            <tbody id="allUnderwritersTableBody">
+
+              <!-- Dynamically populated table rows -->
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </main>
+
+
+
+    <footer class="footer-bg text-white py-6">
+
+      <div class="container mx-auto px-4 flex justify-between items-center">
+
+        <div>
+
+          <p>&copy; 2025 Star Protect Insurance. All rights reserved.</p>
+
+        </div>
+
+        <div class="flex space-x-4">
+
+          <a href="#" class="hover:text-gray-300">Privacy Policy</a>
+
+          <a href="#" class="hover:text-gray-300">Terms of Service</a>
+
+        </div>
+
+      </div>
+
+    </footer>
+
+  </div>
+
+
+
+  <script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+      const sidebar = document.getElementById('sidebar');
+
+      const mainContent = document.getElementById('mainContent');
+
+      const sidebarToggle = document.getElementById('sidebarToggle');
+
+      const sidebarTitle = document.getElementById('sidebarTitle');
+
+      const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+      const pageTitle = document.getElementById('pageTitle');
+
+      const sidebarMenuItems = document.querySelectorAll('.sidebar-menu-item');
+
+      const dashboardSections = document.querySelectorAll('.dashboard-section');
+
+
+
+      let isCollapsed = false;
+
+
+
+      // Sidebar Toggle Functionality
+
+      sidebarToggle.addEventListener('click', () => {
+
+        isCollapsed = !isCollapsed;
+
+
+
+        if (isCollapsed) {
+
+          // Collapse sidebar
+
+          sidebar.classList.remove('w-64');
+
+          sidebar.classList.add('w-16');
+
+          mainContent.classList.remove('ml-64');
+
+          mainContent.classList.add('ml-16');
+
+
+
+          // Hide text and title
+
+          sidebarTitle.classList.add('opacity-0');
+
+          sidebarTexts.forEach(text => {
+
+            text.classList.add('hidden');
+
+          });
+
+
+
+          // Change toggle icon to expand
+
+          sidebarToggle.innerHTML = `
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+
+            </svg>
+
+          `;
+
+        } else {
+
+          // Expand sidebar
+
+          sidebar.classList.remove('w-16');
+
+          sidebar.classList.add('w-64');
+
+          mainContent.classList.remove('ml-16');
+
+          mainContent.classList.add('ml-64');
+
+
+
+          // Show text and title
+
+          sidebarTitle.classList.remove('opacity-0');
+
+          sidebarTexts.forEach(text => {
+
+            text.classList.remove('hidden');
+
+          });
+
+
+
+          // Change toggle icon to collapse
+
+          sidebarToggle.innerHTML = `
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+
+            </svg>
+
+          `;
+
+        }
+
+      });
+
+
+
+      // Section Navigation Functionality
+
+      sidebarMenuItems.forEach(item => {
+
+        item.addEventListener('click', (e) => {
+
+          e.preventDefault();
+
+          const sectionId = item.getAttribute('data-section');
+
+
+
+          // Remove active class from all sections
+
+          dashboardSections.forEach(section => {
+
+            section.classList.remove('active');
+
+          });
+
+
+
+          // Remove active highlight from all menu items
+
+          sidebarMenuItems.forEach(menuItem => {
+
+            menuItem.classList.remove('bg-blue-100', 'text-blue-700');
+
+          });
+
+
+
+          // Add active class to selected section
+
+          const selectedSection = document.getElementById(`${sectionId}Section`);
+
+          if (selectedSection) {
+
+            selectedSection.classList.add('active');
+
+          }
+
+
+
+          // Highlight selected menu item
+
+          item.classList.add('bg-blue-100', 'text-blue-700');
+
+
+
+          // Update page title
+
+          const sectionTitle = item.querySelector('.sidebar-text').textContent;
+
+          pageTitle.textContent = sectionTitle;
+
+        });
+
+      });
+
+    });
+
+  </script>
+
+  <script src="admin.js"></script>
+
+</body>
+
+
+
+</html>
+
+
+
+admin.js
+
+// admin.js
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  const sidebarMenuItems = document.querySelectorAll('.sidebar-menu-item');
+
+  const dashboardSections = document.querySelectorAll('.dashboard-section');
+
+
+
+  const underwriterForm = document.getElementById('underwriterForm');
+
+  const searchUnderwriterDiv = document.getElementById('searchUnderwriterDiv');
+
+  const updatePasswordDiv = document.getElementById('updatePasswordDiv');
+
+  const deleteUnderwriterDiv = document.getElementById('deleteUnderwriterDiv');
+
+  const viewAllUnderwritersDiv = document.getElementById('viewAllUnderwritersDiv');
+
+
+
+  const newUnderwriterForm = document.getElementById('newUnderwriterForm');
+
+  const cancelUnderwriterBtn = document.getElementById('cancelUnderwriterBtn');
+
+  const searchResults = document.getElementById('searchResults');
+
+  const performSearchBtn = document.getElementById('performSearchBtn');
+
+  const performUpdateBtn = document.getElementById('performUpdateBtn');
+
+  const performDeleteBtn = document.getElementById('performDeleteBtn');
+
+  const allUnderwritersTableBody = document.getElementById('allUnderwritersTableBody');
+
+
+
+  let appData = JSON.parse(localStorage.getItem('appData')) || { users: {}, underwriters: [] };
+
+  let underwriters = appData.underwriters;
+
+  let users = appData.users;
+
+
+
+  let nextUnderwriterId = underwriters.length > 0 ? Math.max(...underwriters.map(u => parseInt(u.id))) + 1 : 1;
+
+
+
+  document.getElementById('underwriterId').value = nextUnderwriterId;
+
+
+
+  // Sidebar Navigation Functionality
+
+  sidebarMenuItems.forEach(item => {
+
+    item.addEventListener('click', (e) => {
+
+      e.preventDefault();
+
+      const sectionId = item.getAttribute('data-section');
+
+
+
+      // Remove active class from all sections
+
+      dashboardSections.forEach(section => {
+
+        section.classList.remove('active');
+
+      });
+
+
+
+      // Remove active highlight from all menu items
+
+      sidebarMenuItems.forEach(menuItem => {
+
+        menuItem.classList.remove('bg-blue-100', 'text-blue-700');
+
+      });
+
+
+
+      // Highlight selected menu item
+
+      item.classList.add('bg-blue-100', 'text-blue-700');
+
+
+
+      // Hide all forms/divs
+
+      hideAll();
+
+
+
+      // Show the selected section
+
+      if (sectionId === 'register') {
+
+        underwriterForm.classList.remove('hidden');
+
+      } else if (sectionId === 'search') {
+
+        searchUnderwriterDiv.classList.remove('hidden');
+
+      } else if (sectionId === 'update') {
+
+        updatePasswordDiv.classList.remove('hidden');
+
+      } else if (sectionId === 'delete') {
+
+        deleteUnderwriterDiv.classList.remove('hidden');
+
+      } else if (sectionId === 'view-all') {
+
+        viewAllUnderwritersDiv.classList.remove('hidden');
+
+        renderAllUnderwriters();
+
+      } else {
+
+        // Default to dashboard
+
+        document.getElementById('dashboardSection').classList.add('active');
+
+      }
+
+    });
+
+  });
+
+
+
+  cancelUnderwriterBtn.addEventListener('click', () => {
+
+    underwriterForm.classList.add('hidden');
+
+  });
+
+
+
+  newUnderwriterForm.addEventListener('submit', (event) => {
+
+    console.log('Form submitted');
+
+    event.preventDefault();
+
+    const id = nextUnderwriterId.toString();
+
+    const name = document.getElementById('name').value;
+
+    const dob = document.getElementById('dob').value;
+
+    const joiningDate = document.getElementById('joiningDate').value;
+
+    const password = document.getElementById('defaultPassword').value;
+
+
+
+    underwriters.push({ id, name, dob, joiningDate, password });
+
+    appData.users[id] = {
+
+      userId: id,
+
+      password: password,
+
+      userType: 'underwriter'
+
+    };
+
+    appData.underwriters = underwriters; // Update appData
+
+    localStorage.setItem('appData', JSON.stringify(appData));
+
+
+
+    nextUnderwriterId++;
+
+    document.getElementById('underwriterId').value = nextUnderwriterId;
+
+
+
+    underwriterForm.classList.add('hidden');
+
+    newUnderwriterForm.reset();
+
+    console.log("data that will be saved", appData);
+
+  });
+
+
+
+  performSearchBtn.addEventListener('click', () => {
+
+    const searchId = document.getElementById('searchId').value;
+
+    const found = underwriters.find(u => u.id === searchId);
+
+
+
+    if (found) {
+
+      searchResults.innerHTML = `<p>ID: ${found.id}, Name: ${found.name}, DOB: ${found.dob}, Joining Date: ${found.joiningDate}</p>`;
+
+    } else {
+
+      searchResults.innerHTML = '<p>Underwriter not found.</p>';
+
+    }
+
+  });
+
+
+
+  performUpdateBtn.addEventListener('click', () => {
+
+    const updateId = document.getElementById('updateId').value;
+
+    const newPassword = document.getElementById('newPassword').value;
+
+   
+
+    const index = underwriters.findIndex(u => u.id === updateId);
+
+    if (index !== -1) {
+
+      underwriters[index].password = newPassword;
+
+      appData.underwriters = underwriters;
+
+   
+
+      // Update user credentials in appData.users
+
+      if (appData.users[updateId]) {
+
+        appData.users[updateId].password = newPassword;
+
+      }
+
+   
+
+      localStorage.setItem('appData', JSON.stringify(appData));
+
+      alert('Password updated successfully.');
+
+    } else {
+
+      alert('Underwriter not found.');
+
+    }
+
+  });
+
+
+
+  performDeleteBtn.addEventListener('click', () => {
+
+    const deleteId = document.getElementById('deleteId').value;
+
+    underwriters = underwriters.filter(u => u.id !== deleteId);
+
+    appData.underwriters = underwriters;
+
+   
+
+    // Delete user credentials from appData.users
+
+    if (appData.users[deleteId]) {
+
+      delete appData.users[deleteId];
+
+    }
+
+   
+
+    localStorage.setItem('appData', JSON.stringify(appData));
+
+    alert('Underwriter deleted.');
+
+  });
+
+
+
+  function renderAllUnderwriters() {
+
+    allUnderwritersTableBody.innerHTML = '';
+
+    underwriters.forEach(u => {
+
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+
+        <td class="py-2 px-4 border-b">${u.id}</td>
+
+        <td class="py-2 px-4 border-b">${u.name}</td>
+
+        <td class="py-2 px-4 border-b">${u.dob}</td>
+
+        <td class="py-2 px-4 border-b">${u.joiningDate}</td>
+
+      `;
+
+      allUnderwritersTableBody.appendChild(row);
+
+    });
+
+  }
+
+
+
+  function hideAll() {
+
+    underwriterForm.classList.add('hidden');
+
+    searchUnderwriterDiv.classList.add('hidden');
+
+    updatePasswordDiv.classList.add('hidden');
+
+    deleteUnderwriterDiv.classList.add('hidden');
+
+    viewAllUnderwritersDiv.classList.add('hidden');
+
+  }
+
+});
+
+
+
+user.html
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+ <head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>New Vehicle Insurance - Underwriter</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+
+   body {
+
+    display: flex;
+
+    flex-direction: column;
+
+    min-height: 100vh;
+
+   }
+
+
+
+   #mainContent {
+
+    flex-grow: 1;
+
+   }
+
+
+
+   .footer-bg {
+
+    background: linear-gradient(135deg, #1c3643, #0f2027);
+
+   }
+
+
+
+   .dashboard-section {
+
+    display: none;
+
+   }
+
+
+
+   .dashboard-section.active {
+
+    display: block;
+
+   }
+
+  </style>
+
+ </head>
+
+
+
+ <body class="bg-gray-100 flex">
+
+  <!-- Sidebar -->
+
+  <aside
+
+   id="sidebar"
+
+   class="w-64 bg-white shadow-md h-screen fixed left-0 top-0 z-40 transition-all duration-300 ease-in-out"
+
+  >
+
+   <div class="p-4 border-b flex justify-between items-center">
+
+    <div class="flex items-center">
+
+     <img
+
+      src="assets/logo.png"
+
+      alt="Star Protect Insurance Logo"
+
+      class="h-10 mr-2"
+
+     />
+
+     <span
+
+      id="sidebarTitle"
+
+      class="text-xl font-semibold text-gray-800 transition-opacity duration-300"
+
+      >Star Protect</span
+
+     >
+
+    </div>
+
+   </div>
+
+  </aside>
+
+
+
+  <div
+
+   id="mainContent"
+
+   class="ml-64 flex-1 transition-all duration-300 ease-in-out"
+
+  >
+
+   <header class="bg-white shadow-md">
+
+    <div
+
+     class="container mx-auto px-4 py-3 flex justify-between items-center"
+
+    >
+
+     <div class="flex items-center">
+
+      <h1 id="pageTitle" class="text-2xl font-semibold text-gray-800">
+
+       Underwriter Dashboard
+
+      </h1>
+
+     </div>
+
+    </div>
+
+   </header>
+
+
+
+   <main class="container mx-auto p-4 py-8">
+
+    <div id="underwriterForm" class="bg-white p-4 rounded shadow-md mt-6">
+
+     <h3 class="text-xl font-semibold mb-4">
+
+      Create New Vehicle Insurance
+
+     </h3>
+
+     <form id="newInsuranceForm">
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="vehicleNo"
+
+        >Vehicle No</label
+
+       >
+
+       <input
+
+        type="text"
+
+        id="vehicleNo"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        maxlength="10"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="vehicleType"
+
+        >Vehicle Type</label
+
+       >
+
+       <select
+
+        id="vehicleType"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+       >
+
+        <option value="2-wheeler">2-Wheeler</option>
+
+        <option value="4-wheeler">4-Wheeler</option>
+
+       </select>
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="customerName"
+
+        >Customer Name</label
+
+       >
+
+       <input
+
+        type="text"
+
+        id="customerName"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        maxlength="50"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="engineNo"
+
+        >Engine No</label
+
+       >
+
+       <input
+
+        type="text"
+
+        id="engineNo"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="chasisNo"
+
+        >Chasis No</label
+
+       >
+
+       <input
+
+        type="text"
+
+        id="chasisNo"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="phoneNo"
+
+        >Phone No</label
+
+       >
+
+       <input
+
+        type="number"
+
+        id="phoneNo"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        maxlength="10"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="premiumAmount"
+
+        >Premium Amount</label
+
+       >
+
+       <input
+
+        type="number"
+
+        id="premiumAmount"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="insuranceType"
+
+        >Insurance Type</label
+
+       >
+
+       <select
+
+        id="insuranceType"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+       >
+
+        <option value="full">Full Insurance</option>
+
+        <option value="third-party">Third Party</option>
+
+       </select>
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="fromDate"
+
+        >From Date</label
+
+       >
+
+       <input
+
+        type="date"
+
+        id="fromDate"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="toDate"
+
+        >To Date</label
+
+       >
+
+       <input
+
+        type="date"
+
+        id="toDate"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <div class="mb-4">
+
+       <label
+
+        class="block text-gray-700 text-sm font-bold mb-2"
+
+        for="underwriterId"
+
+        >Underwriter ID</label
+
+       >
+
+       <input
+
+        type="text"
+
+        id="underwriterId"
+
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+
+        required
+
+       />
+
+      </div>
+
+
+
+      <button
+
+       type="submit"
+
+       class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
+
+      >
+
+       Create Policy
+
+      </button>
+
+     </form>
+
+    </div>
+
+   </main>
+
+
+
+   <footer class="footer-bg text-white py-6">
+
+    <div class="container mx-auto px-4 flex justify-between items-center">
+
+     <p>&copy; 2025 Star Protect Insurance</p>
+
+    </div>
+
+   </footer>
+
+  </div>
+
+
+
+  <script src="user.js"></script>
+
+ </body>
+
+</html>
+
+
+
+user.js
+
+// Function to save vehicle insurance policy to localStorage
+
+function savePolicy() {
+
+  // Extract form values
+
+  const vehicleNo = document.getElementById('vehicleNo').value;
+
+  const vehicleType = document.getElementById('vehicleType').value;
+
+  const customerName = document.getElementById('customerName').value;
+
+  const engineNo = document.getElementById('engineNo').value;
+
+  const chasisNo = document.getElementById('chasisNo').value;
+
+  const phoneNo = document.getElementById('phoneNo').value;
+
+  const premiumAmount = document.getElementById('premiumAmount').value;
+
+  const insuranceType = document.getElementById('insuranceType').value;
+
+  const fromDate = document.getElementById('fromDate').value;
+
+  const toDate = document.getElementById('toDate').value;
+
+  const underwriterId = document.getElementById('underwriterId').value;
+
+
+
+  // Function to save vehicle insurance policy to localStorage
+
+function savePolicy() {
+
+  // Extract form values
+
+  const vehicleNo = document.getElementById('vehicleNo').value;
+
+  const vehicleType = document.getElementById('vehicleType').value;
+
+  const customerName = document.getElementById('customerName').value;
+
+  const engineNo = document.getElementById('engineNo').value;
+
+  const chasisNo = document.getElementById('chasisNo').value;
+
+  const phoneNo = document.getElementById('phoneNo').value;
+
+  const premiumAmount = document.getElementById('premiumAmount').value;
+
+  const insuranceType = document.getElementById('insuranceType').value;
+
+  const fromDate = document.getElementById('fromDate').value;
+
+  const toDate = document.getElementById('toDate').value;
+
+  const underwriterId = document.getElementById('underwriterId').value;
+
+
+
+  // Create a policy object
+
+  const policy = {
+
+    vehicleNo,
+
+    vehicleType,
+
+    customerName,
+
+    engineNo,
+
+    chasisNo,
+
+    phoneNo,
+
+    premiumAmount,
+
+    insuranceType,
+
+    fromDate,
+
+    toDate,
+
+    underwriterId,
+
+  };
+
+
+
+  // Initialize appData if not present
+
+  if (!localStorage.getItem("appData")) {
+
+    const initialAppData = {
+
+      users: {
+
+        "admin": { "userId": "admin", "password": "admin123", "userType": "admin" },
+
+        "underwriter1": { "userId": "uw1", "password": "uwpass", "userType": "underwriter" }
+
+      },
+
+      underwriters: [],
+
+      vehiclePolicy: [] // Initialize an empty array for vehicle policies
+
+    };
+
+    localStorage.setItem("appData", JSON.stringify(initialAppData));
+
+  }
+
+
+
+  // Retrieve existing appData from localStorage
+
+  const appData = JSON.parse(localStorage.getItem("appData"));
+
+
+
+  // Add new policy to the vehiclePolicy array
+
+  appData.vehiclePolicy.push(policy);
+
+
+
+  // Save updated appData back to localStorage
+
+  localStorage.setItem("appData", JSON.stringify(appData));
+
+
+
+  // Confirm and alert user
+
+  alert('New vehicle insurance policy created and saved successfully!');
+
+}
+
+
+
+// Attach the savePolicy function to the form submission event
+
+document.getElementById('newInsuranceForm').addEventListener('submit', function (event) {
+
+  event.preventDefault();
+
+  savePolicy();
+
+});
+
+}
+
+
+
+style.css
+
+/*Common Style file for all*/
+
+
+
+
+
+
+
+body
+
+{
+
+
+
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+
+
+  box-sizing: border-box;
+
+
+
+  margin: 0;
+
+
+
+  padding: 0;
+
+
+
+  background-color: #50E3C2;
+
+
+
+  background-image:
+
+
+
+    radial-gradient(at 47% 33%, hsl(162.00, 77%, 40%) 0, transparent 59%),
+
+
+
+    radial-gradient(at 82% 65%, hsl(198.00, 100%, 50%) 0, transparent 55%);
+
+
+
+}
+
+
+
+
+
+
+
+#logo
+
+{
+
+
+
+  width: 80px;
+
+
+
+  height: 80px;
+
+
+
+  border-radius: 50%;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+.slider
+
+{
+
+
+
+  position: absolute;
+
+
+
+  top: 0;
+
+
+
+  left: 0;
+
+
+
+  width: 100%;
+
+
+
+  height: 100%;
+
+
+
+  display: flex;
+
+
+
+  align-items: center;
+
+
+
+  justify-content: center;
+
+
+
+  color: aliceblue;
+
+
+
+  font-size: 24px;
+
+
+
+  animation: swipeUp 2s ease-in-out, hide 0s linear 2s forwards;
+
+
+
+  z-index: 1000;
+
+
+
+  background-size: 100% 40px;
+
+
+
+  background: repeating-linear-gradient(to bottom, #444 0%, #444 10%, #222 10%, #222 20%);
+
+
+
+}
+
+
+
+
+
+
+
+.main-container
+
+{
+
+
+
+  display: flex;
+
+
+
+  align-items: center;
+
+
+
+  justify-content: center;
+
+
+
+  width: 100%;
+
+
+
+  height: 100vh;
+
+
+
+}
+
+
+
+
+
+
+
+.frontlogo
+
+{
+
+
+
+  display: flex;
+
+
+
+  top: 0;
+
+
+
+  left: 10px;
+
+
+
+}
+
+
+
+
+
+
+
+#logo-login
+
+{
+
+
+
+  top: 0;
+
+
+
+  left: 10px;
+
+
+
+  width: 42px;
+
+
+
+  border-radius: 50%;
+
+
+
+}
+
+
+
+
+
+
+
+.container
+
+{
+
+
+
+  display: flex;
+
+
+
+  flex-direction: row;
+
+
+
+  width: 80%;
+
+
+
+  max-width: 800px;
+
+
+
+  backdrop-filter: blur(25px) saturate(98%);
+
+
+
+  -webkit-backdrop-filter: blur(25px) saturate(98%);
+
+
+
+  background-color: rgba(255, 255, 255, 0.66);
+
+
+
+  border-radius: 12px;
+
+
+
+  border: 1px solid rgba(209, 213, 219, 0.3);
+
+
+
+  text-align: center;
+
+
+
+}
+
+
+
+
+
+
+
+.imageMain
+
+{
+
+
+
+  display: flex;
+
+
+
+  justify-content: center;
+
+
+
+  align-items: center;
+
+
+
+  width: 50%;
+
+
+
+  height: 100%;
+
+
+
+  background: white;
+
+
+
+  overflow: hidden;
+
+
+
+  border-top-left-radius: 10px;
+
+
+
+  border-bottom-left-radius: 10px;
+
+
+
+}
+
+
+
+
+
+
+
+.frontImage
+
+{
+
+
+
+  max-height: 100%;
+
+
+
+  max-width: 100%;
+
+
+
+  object-fit: contain;
+
+
+
+  background-color: white;
+
+
+
+}
+
+
+
+
+
+
+
+.loginFrom
+
+{
+
+
+
+  display: flex;
+
+
+
+  flex-direction: column;
+
+
+
+  justify-content: center;
+
+
+
+}
+
+
+
+
+
+
+
+label
+
+{
+
+
+
+  display: block;
+
+
+
+  text-align: left;
+
+
+
+  margin-top: 10px;
+
+
+
+  font-weight: bold;
+
+
+
+}
+
+
+
+
+
+
+
+input,
+
+
+
+select
+
+{
+
+
+
+  width: 100%;
+
+
+
+  padding: 8px;
+
+
+
+  margin-top: 5px;
+
+
+
+  border: none;
+
+
+
+  border-bottom: 1px solid #ccc;
+
+
+
+  border-radius: 4px;
+
+
+
+}
+
+
+
+
+
+
+
+#userType
+
+{
+
+
+
+  font-weight: 600;
+
+
+
+}
+
+
+
+
+
+
+
+button
+
+{
+
+
+
+  width: 100%;
+
+
+
+  padding: 10px;
+
+
+
+  margin-top: 15px;
+
+
+
+  background: #007bff;
+
+
+
+  border-radius: 50px;
+
+
+
+  border: none;
+
+
+
+  color: white;
+
+
+
+  cursor: pointer;
+
+
+
+  font-size: 16px;
+
+
+
+}
+
+
+
+
+
+
+
+button:hover
+
+{
+
+
+
+  background: #0056b3;
+
+
+
+}
+
+
+
+
+
+
+
+input:focus
+
+{
+
+
+
+  outline: none;
+
+
+
+  border-bottom: 1px solid #007bff
+
+}
+
+
+
+
+
+/*admin page*/
+
+
+
+
+
+
+
+.navbar
+
+{
+
+
+
+  display: flex;
+
+
+
+  align-items: center;
+
+
+
+  flex-direction: row;
+
+
+
+  width: 100%;
+
+
+
+  height: 50px;
+
+
+
+  top: 0;
+
+
+
+  left: 0;
+
+
+
+  background: #1c2833;
+
+
+
+  color: aliceblue;
+
+
+
+  padding: 8px;
+
+
+
+}
+
+
+
+
+
+
+
+.navbar a
+
+{
+
+
+
+  display: flex;
+
+
+
+  flex-direction: column;
+
+
+
+}
+
+
+
+
+
+
+
+.navbar img
+
+{
+
+
+
+  border-radius: 50%;
+
+
+
+  width: 50px;
+
+
+
+  color: white;
+
+
+
+}
+
+
+
+
+
+
+
+.navbar p
+
+{
+
+
+
+  font-size: 20px;
+
+
+
+  font-weight: 800;
+
+
+
+  text-align: center;
+
+
+
+  padding-left: 10px;
+
+
+
+}
+
+
+
+
+
+
+
+/* Sidebar Styles */
+
+
+
+.sidebar
+
+{
+
+
+
+  display: flex;
+
+
+
+  flex-direction: column;
+
+
+
+  width: 250px;
+
+
+
+  background-color: #dcfffc;
+
+
+
+  color: rgb(0, 0, 0);
+
+
+
+  height: 100vh;
+
+
+
+  padding-top: 20px;
+
+
+
+  position: fixed;
+
+
+
+  transition: width 0.3s;
+
+
+
+  overflow: hidden;
+
+
+
+}
+
+
+
+
+
+
+
+.sidebar.collapsed
+
+{
+
+
+
+  width: 60px;
+
+
+
+}
+
+
+
+
+
+
+
+.toggle-btn
+
+{
+
+
+
+  background: #1abc9c;
+
+
+
+  border: none;
+
+
+
+  color: rgb(0, 0, 0);
+
+
+
+  padding: 10px;
+
+
+
+  text-align: left;
+
+
+
+  font-size: 16px;
+
+
+
+  cursor: pointer;
+
+
+
+}
+
+
+
+
+
+
+
+.sidebar button
+
+{
+
+
+
+  background: none;
+
+
+
+  border: none;
+
+
+
+  color: rgb(0, 0, 0);
+
+
+
+  padding: 20px;
+
+
+
+  text-align: left;
+
+
+
+  width: 100%;
+
+
+
+  border-radius: 50px;
+
+
+
+  cursor: pointer;
+
+
+
+  font-size: 20px;
+
+
+
+  outline: none;
+
+
+
+}
+
+
+
+
+
+
+
+.sidebar button:hover
+
+{
+
+
+
+  background-color: #1abc9c;
+
+
+
+}
+
+
+
+
+
+
+
+.submenu
+
+{
+
+
+
+  display: flex;
+
+
+
+  background: #dcfffc;
+
+
+
+  padding-left: 10px;
+
+
+
+}
+
+
+
+
+
+
+
+.submenu a
+
+{
+
+
+
+  display: flex;
+
+
+
+  flex-direction: column;
+
+
+
+  color: rgb(0, 0, 0);
+
+
+
+  padding: 10px;
+
+
+
+  text-decoration: none;
+
+
+
+}
+
+
+
+
+
+
+
+.submenu a p
+
+{
+
+
+
+  padding-left: 20px;
+
+
+
+}
+
+
+
+
+
+
+
+.submenu a:hover
+
+{
+
+
+
+  background-color: #16a085;
+
+
+
+}
+
+
+
+
+
+
+
+/* Main content */
+
+
+
+.admin-container
+
+{
+
+
+
+  margin-left: 260px;
+
+
+
+  padding: 20px;
+
+
+
+  width: 100%;
+
+
+
+  height: 100vh;
+
+
+
+  transition: margin-left 0.3s;
+
+
+
+}
+
+
+
+
+
+
+
+.admin-container h2
+
+{
+
+
+
+  font-size: 25px;
+
+
+
+}
+
+
+
+
+
+
+
+.collapsed+.container
+
+{
+
+
+
+  margin-left: 70px;
+
+
+
+}
+
+
+
+
+
+
+
+/* Sections */
+
+
+
+.section
+
+{
+
+
+
+  display: flex;
+
+
+
+  width: 80%;
+
+
+
+  max-width: 500px;
+
+
+
+}
+
+
+
+
+
+
+
+@keyframes swipeUp
+
+{
+
+
+
+  40%
+
+  {
+
+
+
+    transform: translateY(0);
+
+
+
+  }
+
+
+
+
+
+
+
+  100%
+
+  {
+
+
+
+    transform: translateY(-100%);
+
+
+
+    display: none;
+
+
+
+  }
+
+
+
+}
+
+
+
+
+
+
+
+@keyframes hide
+
+{
+
+
+
+  0%
+
+  {
+
+
+
+    display: block;
+
+
+
+  }
+
+
+
+
+
+
+
+  100%
+
+  {
+
+
+
+    display: none;
+
+
+
+  }
+
+
+
+}
+
