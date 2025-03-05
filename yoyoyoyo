@@ -1,0 +1,1660 @@
+main
+
+
+
+package com.starproject.main;
+
+
+
+import java.util.*;
+
+
+
+import com.starproject.service.AdminServices;
+
+import com.starproject.service.UnderWriterServices;
+
+
+
+public class Main {
+
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+
+		while (true) {
+
+			System.out.println("=== Star Project Vehicle System ===");
+
+			System.out.println("Select Your Role:");
+
+			System.out.println("1. Admin Login");
+
+			System.out.println("2. UnderWriter Login");
+
+			System.out.println("3. Exit");
+
+			System.out.print("Enter Your Choice: ");
+
+			int choice = 0;
+
+			String errorMessage = "Invalid choice! Please select a valid option";
+
+			try {
+
+				choice = sc.nextInt();
+
+
+
+			} catch (InputMismatchException e) {
+
+				errorMessage = "Invalid input! Please select a valid option";
+
+			}
+
+			sc.nextLine();
+
+
+
+			switch (choice) {
+
+			case 1:
+
+				AdminServices.adminLogin(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 2:
+
+				UnderWriterServices.underWriterLogIn(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 3:
+
+				System.out.println("Exiting the system. Thank you!");
+
+				sc.close();
+
+				System.exit(0);
+
+				break;
+
+			default:
+
+				System.out.println(errorMessage);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+			}
+
+		}
+
+
+
+	}
+
+}
+
+
+
+
+
+Underwriter
+
+
+
+package com.starproject.model;
+
+
+
+import java.time.LocalDate;
+
+import java.time.format.DateTimeFormatter;
+
+import java.time.format.DateTimeParseException;
+
+import java.util.Scanner;
+
+
+
+public class UnderWriter {
+
+	private static int idCounter = 1000;
+
+	private int underwriterId;
+
+	private String name;
+
+	private String dob;
+
+	private String joiningDate;
+
+	private String defaultPassword;
+
+
+
+	public int getUnderwriterId() {
+
+		return underwriterId;
+
+	}
+
+
+
+	public void setUnderwriterId(int underwriterId) {
+
+		this.underwriterId = underwriterId;
+
+	}
+
+
+
+	public String getName() {
+
+		return name;
+
+	}
+
+
+
+	public void setName(String name) {
+
+		this.name = name;
+
+	}
+
+
+
+	public String getDob() {
+
+		return dob;
+
+	}
+
+
+
+	public void setDob(String dob) {
+
+		this.dob = dob;
+
+	}
+
+
+
+	public String getJoiningDate() {
+
+		return joiningDate;
+
+	}
+
+
+
+	public void setJoiningDate(String joiningDate) {
+
+		this.joiningDate = joiningDate;
+
+	}
+
+
+
+	public String getDefaultPassword() {
+
+		return this.defaultPassword;
+
+	}
+
+
+
+	public void setDefaultPassword(String defaultPassword) {
+
+		this.defaultPassword = defaultPassword;
+
+	}
+
+
+
+	public UnderWriter(String name, String dob, String joiningDate, String defaultPassword) {
+
+		this.underwriterId = idCounter++;
+
+		this.name = name;
+
+		this.dob = dob;
+
+		this.joiningDate = joiningDate;
+
+		this.defaultPassword = defaultPassword;
+
+	}
+
+
+
+	public static Boolean isValidPassword(String password) {
+
+		boolean isValid = false;
+
+		if (password.length() >= 8) {
+
+			isValid = true;
+
+		} else {
+
+			System.out.println("Password must be 8 characters long.");
+
+			isValid = false;
+
+		}
+
+		return isValid;
+
+	}
+
+
+
+	public static boolean isValidDOB(String dob) {
+
+		boolean isValid = false;
+
+		try {
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+			LocalDate dateOfBirth = LocalDate.parse(dob, formatter);
+
+			LocalDate today = LocalDate.now();
+
+			isValid = dateOfBirth.isBefore(today);
+
+		} catch (DateTimeParseException e) {
+
+			System.out.println("Invalid date format.");
+
+		}
+
+		return isValid;
+
+	}
+
+
+
+	public static boolean isValidDate(String dob) {
+
+		boolean isValid = false;
+
+		try {
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+			LocalDate dateOfBirth = LocalDate.parse(dob, formatter);
+
+			isValid = true;
+
+		} catch (DateTimeParseException e) {
+
+			System.out.println("Invalid date format.");
+
+		}
+
+		return isValid;
+
+	}
+
+
+
+	@Override
+
+	public String toString() {
+
+		return "UnderWriter ID: " + underwriterId + ", Name: " + name + ", Date of birth: " + dob + ", Joining Date: "
+
+				+ joiningDate;
+
+	}
+
+}
+
+
+
+
+
+Vehicle 
+
+
+
+package com.starproject.model;
+
+
+
+public class Vehicle {
+
+	int policyNo;
+
+	String vehicleNo;
+
+	String vehicleType;
+
+	String coustomerName;
+
+	int engineNo;
+
+	int chassisNo;
+
+	String phoneNo;
+
+	String type;
+
+	double premiumAmount;
+
+	String fromDate;
+
+	String toDate;
+
+	int underwriterId;
+
+
+
+
+
+
+
+
+
+	public int getPolicyNo() {
+
+		return policyNo;
+
+	}
+
+
+
+	public void setPolicyNo(int policyNo) {
+
+		this.policyNo = policyNo;
+
+	}
+
+
+
+	public String getVehicleNo() {
+
+		return vehicleNo;
+
+	}
+
+
+
+	public void setVehicleNo(String vehicleNo) {
+
+		this.vehicleNo = vehicleNo;
+
+	}
+
+
+
+	public String getVehicleType() {
+
+		return vehicleType;
+
+	}
+
+
+
+	public void setVehicleType(String vehicleType) {
+
+		this.vehicleType = vehicleType;
+
+	}
+
+
+
+	public String getCoustomerName() {
+
+		return coustomerName;
+
+	}
+
+
+
+	public void setCoustomerName(String coustomerName) {
+
+		this.coustomerName = coustomerName;
+
+	}
+
+
+
+	public int getEngineNo() {
+
+		return engineNo;
+
+	}
+
+
+
+	public void setEngineNo(int engineNo) {
+
+		this.engineNo = engineNo;
+
+	}
+
+
+
+	public int getChassisNo() {
+
+		return chassisNo;
+
+	}
+
+
+
+	public void setChassisNo(int chassisNo) {
+
+		this.chassisNo = chassisNo;
+
+	}
+
+
+
+	public String getPhoneNo() {
+
+		return phoneNo;
+
+	}
+
+
+
+	public void setPhoneNo(String phoneNo) {
+
+		this.phoneNo = phoneNo;
+
+	}
+
+
+
+	public String getType() {
+
+		return type;
+
+	}
+
+
+
+	public void setType(String type) {
+
+		this.type = type;
+
+	}
+
+
+
+	public double getPremiumAmount() {
+
+		return premiumAmount;
+
+	}
+
+
+
+	public void setPremiumAmount(double premiumAmount) {
+
+		this.premiumAmount = premiumAmount;
+
+	}
+
+
+
+	public String getFromDate() {
+
+		return fromDate;
+
+	}
+
+
+
+	public void setFromDate(String fromDate) {
+
+		this.fromDate = fromDate;
+
+	}
+
+
+
+	public String getToDate() {
+
+		return toDate;
+
+	}
+
+
+
+	public void setToDate(String toDate) {
+
+		this.toDate = toDate;
+
+	}
+
+
+
+	public int getUnderwriterId() {
+
+		return underwriterId;
+
+	}
+
+
+
+	public void setUnderwriterId(int underwriterId) {
+
+		this.underwriterId = underwriterId;
+
+	}
+
+
+
+	public Vehicle(int policyNo, String vehicleNo, String vehicleType, String coustomerName, int engineNo,
+
+			int chassisNo, String phoneNo, String type, double premiumAmount, String fromDate, String toDate,
+
+			int underwriterId) {
+
+		this.policyNo = policyNo;
+
+		this.vehicleNo = vehicleNo;
+
+		this.vehicleType = vehicleType;
+
+		this.coustomerName = coustomerName;
+
+		this.engineNo = engineNo;
+
+		this.chassisNo = chassisNo;
+
+		this.phoneNo = phoneNo;
+
+		this.type = type;
+
+		this.premiumAmount = premiumAmount;
+
+		this.fromDate = fromDate;
+
+		this.toDate = toDate;
+
+		this.underwriterId = underwriterId;
+
+	}
+
+
+
+	@Override
+
+	public String toString() {
+
+		return "Policy No: " + policyNo + ", Vehicle No: " + vehicleNo + ", Vehicle Type: " + vehicleType
+
+				+ ", Coustomer Name: " + coustomerName + ", EngineNo: " + engineNo + ", chassisNo: " + chassisNo
+
+				+ ", phoneNo: " + phoneNo + ", type: " + type + ", Premium Amount: " + premiumAmount + ", From Date: "
+
+				+ fromDate + ", To Date: " + toDate + ", Underwriter ID: " + underwriterId;
+
+	}
+
+}
+
+
+
+adminservices
+
+
+
+package com.starproject.service;
+
+
+
+import java.util.*;
+
+
+
+public class AdminServices {
+
+	private static final String ADMIN_ID = "admin";
+
+	private static final String ADMIN_PASSWORD = "12345";
+
+
+
+	public static void adminLogin(Scanner sc) {
+
+		System.out.println("\n=== Admin Login ===\n");
+
+		System.out.print("Enter Admin Id: ");
+
+		String adminId = sc.nextLine();
+
+		System.out.print("Enter Password: ");
+
+		String adminPassword = sc.nextLine();
+
+		if (adminId.equals(ADMIN_ID) && adminPassword.equals(ADMIN_PASSWORD)) {
+
+			System.out.println("Admin Login Successful!");
+
+			AdminServices.adminMenu(sc);
+
+		} else {
+
+			System.out.println("Invalid credentials! Try again.");
+
+		}
+
+
+
+	}
+
+
+
+	public static void adminMenu(Scanner sc) {
+
+		while (true) {
+
+			System.out.println("=== Admin Menu ===");
+
+			System.out.println("1. Register UnderWriter");
+
+			System.out.println("2. Search UnderWriter by ID");
+
+			System.out.println("3. Update UnderWriter Password");
+
+			System.out.println("4. Delete UnderWriter");
+
+			System.out.println("5. View All UnderWriter");
+
+			System.out.println("6. View Vehicles by Underwriter ID");
+
+			System.out.println("7. Logout");
+
+			System.out.print("Enter Your Choice: ");
+
+			int choice = 0;
+
+			String errorMessage = "Invalid choice! Please select a valid option";
+
+			try {
+
+				choice = sc.nextInt();
+
+
+
+			} catch (InputMismatchException e) {
+
+				errorMessage = "Invalid input! Please select a valid option";
+
+			}
+
+			sc.nextLine();
+
+
+
+			switch (choice) {
+
+			case 1:
+
+				UnderWriterServices.registerUnderWriter(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 2:
+
+				UnderWriterServices.searchUnderWriterByID(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 3:
+
+				UnderWriterServices.updateUnderWriterPassword(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 4:
+
+				UnderWriterServices.deleteUnderWriterByID(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 5:
+
+				UnderWriterServices.viewAllUnderWriters();
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 6:
+
+				VehicleServices.viewVehiclesByUnderWriterID(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 7:
+
+				System.out.println("Logging out...");
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				return;
+
+			default:
+
+				System.out.println(errorMessage);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+			}
+
+		}
+
+	}
+
+}
+
+
+
+unbderwriter sevices
+
+
+
+package com.starproject.service;
+
+
+
+import java.util.*;
+
+
+
+import com.starproject.model.*;
+
+
+
+public class UnderWriterServices {
+
+	private static List<UnderWriter> underWriters = new ArrayList<>();
+
+
+
+	public static void registerUnderWriter(Scanner sc) {
+
+		System.out.print("Enter UnderWriter Name: ");
+
+		String name = sc.nextLine();
+
+		String dob;
+
+		String joiningDate;
+
+		String defaultPassword;
+
+		while (true) {
+
+			System.out.print("Enter a correct DOB in YYYY-MM-DD fromat: ");
+
+			dob = sc.nextLine();
+
+			if (UnderWriter.isValidDOB(dob)) {
+
+				break;
+
+			}
+
+		}
+
+		while (true) {
+
+			System.out.print("Enter a correct Joining Date in YYYY-MM-DD fromat: ");
+
+			joiningDate = sc.nextLine();
+
+			if (UnderWriter.isValidDate(joiningDate)) {
+
+				break;
+
+			}
+
+		}
+
+		while (true) {
+
+			System.out.print("Enter Default Password: ");
+
+			defaultPassword = sc.nextLine();
+
+			if (UnderWriter.isValidPassword(defaultPassword)) {
+
+				break;
+
+			}
+
+		}
+
+		UnderWriter newUnderWriter = new UnderWriter(name, dob, joiningDate, defaultPassword);
+
+		UnderWriterServices.underWriters.add(newUnderWriter);
+
+		System.out.println("UnderWriter Registered Successfully! ID: " + newUnderWriter.getUnderwriterId());
+
+
+
+	}
+
+
+
+	public static void viewAllUnderWriters() {
+
+		System.out.println("=== List of All UnderWriters ===");
+
+		if (UnderWriterServices.underWriters.isEmpty()) {
+
+			System.out.println("no UnderWrites Found");
+
+			return;
+
+		}
+
+		for (UnderWriter ob : UnderWriterServices.underWriters) {
+
+			System.out.println(ob);
+
+		}
+
+	}
+
+
+
+	public static void searchUnderWriterByID(Scanner sc) {
+
+		System.out.print("Enter UnderWriter ID to search: ");
+
+		int underwriterId = 0;
+
+		String errorMessage = "UnderWriter ID Not Found! Please try again";
+
+		try {
+
+			underwriterId = sc.nextInt();
+
+			sc.nextLine();
+
+			for (UnderWriter ob : UnderWriterServices.underWriters) {
+
+				if (ob.getUnderwriterId() == underwriterId) {
+
+					System.out.println("UnderWriter Found:\n" + ob);
+
+					return;
+
+				}
+
+			}
+
+			System.out.println(errorMessage);
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please try again";
+
+			System.out.println(errorMessage);
+
+		}
+
+
+
+	}
+
+
+
+	public static void deleteUnderWriterByID(Scanner sc) {
+
+		System.out.print("Enter UnderWrite ID to Delete: ");
+
+		int deletedId = 0;
+
+		String errorMessage = "UnderWriter ID Not Found! Please try again";
+
+		try {
+
+			deletedId = sc.nextInt();
+
+			sc.nextLine();
+
+			for (UnderWriter ob : UnderWriterServices.underWriters) {
+
+				if (ob.getUnderwriterId() == deletedId) {
+
+					System.out.println("Are You sure you want to delete this UnderWriter? (1. Yes / 2. No");
+
+					int command = sc.nextInt();
+
+					if (command == 1) {
+
+						UnderWriterServices.underWriters.remove(ob);
+
+						System.out.println("UnderWriter deleted successfully!");
+
+					} else {
+
+						System.out.println("Deletion cancelled!");
+
+					}
+
+					return;
+
+				}
+
+			}
+
+			System.out.println(errorMessage);
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please try again";
+
+			System.out.println(errorMessage);
+
+		}
+
+	}
+
+
+
+	public static void updateUnderWriterPassword(Scanner sc) {
+
+		System.out.print("Enter UnderWriter ID to update password: ");
+
+		int updateId = 0;
+
+		String errorMessage = "UnderWriter ID Not Found! Please try again";
+
+		try {
+
+			updateId = sc.nextInt();
+
+			sc.nextLine();
+
+			for (UnderWriter ob : UnderWriterServices.underWriters) {
+
+				if (ob.getUnderwriterId() == updateId) {
+
+					while (true) {
+
+						System.out.print("Enter Default Password: ");
+
+						String defaultPassword = sc.nextLine();
+
+						if (UnderWriter.isValidPassword(defaultPassword)) {
+
+							ob.setDefaultPassword(defaultPassword);
+
+							System.out.println("Password updated successfully!");
+
+							return;
+
+						}
+
+					}
+
+				}
+
+			}
+
+			System.out.println(errorMessage);
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please try again";
+
+			System.out.println(errorMessage);
+
+		}
+
+
+
+	}
+
+
+
+	public static void underWriterLogIn(Scanner sc) {
+
+		System.out.println("\n=== UnderWriter Login ===\n");
+
+		System.out.print("Enter UnderWriter Id: ");
+
+		int underWriterId = 0;
+
+		String errorMessage = "UnderWriter ID Not Found! Please try again";
+
+		try {
+
+			underWriterId = sc.nextInt();
+
+			sc.nextLine();
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please try again";
+
+			System.out.println(errorMessage);
+
+			sc.nextLine();
+
+			return ;
+
+		}
+
+		String underWriterPassword;
+
+		while (true) {
+
+			System.out.print("Enter Default Password: ");
+
+			underWriterPassword = sc.nextLine();
+
+			if (UnderWriter.isValidPassword(underWriterPassword)) {
+
+				break;
+
+			}
+
+		}
+
+		for (UnderWriter uw : UnderWriterServices.underWriters) {
+
+			if (uw.getUnderwriterId() == underWriterId && uw.getDefaultPassword().equals(underWriterPassword)) {
+
+				System.out.println("UnderWriter Login Successful!");
+
+				UnderWriterServices.underWriterMenu(sc, underWriterId);
+
+				break;
+
+			} else {
+
+				System.out.println("Invalid credentials! Try again.");
+
+			}
+
+		}
+
+		System.out.println("UserWriter does not exist.");
+
+
+
+	}
+
+
+
+	private static void underWriterMenu(Scanner sc, int underWriterId) {
+
+		while (true) {
+
+			System.out.println("=== UnderWriter Menu ===");
+
+			System.out.println("1. Creat new Vehicle Insurance");
+
+			System.out.println("2. Renew Policy");
+
+			System.out.println("3. Change Policy Type");
+
+			System.out.println("4. View Policies");
+
+			System.out.println("5. Logout");
+
+			System.out.print("Enter Your Choice: ");
+
+			int choice = 0;
+
+			String errorMessage = "Invalid choice! Please select a valid option";
+
+			try {
+
+				choice = sc.nextInt();
+
+
+
+			} catch (InputMismatchException e) {
+
+				errorMessage = "Invalid input! Please select a valid option";
+
+			}
+
+			sc.nextLine();
+
+
+
+			switch (choice) {
+
+			case 1:
+
+				VehicleServices.createVehicleInsurance(sc, underWriterId);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 2:
+
+				VehicleServices.renewPolicy(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 3:
+
+				VehicleServices.changePolicyType(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 4:
+
+				VehicleServices.viewPolicies(sc);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				break;
+
+			case 5:
+
+				System.out.println("Logging out...");
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+				return;
+
+			default:
+
+				System.out.println(errorMessage);
+
+				System.out.println("Press 'Enter' for continue..");
+
+				sc.nextLine();
+
+			}
+
+		}
+
+
+
+	}
+
+
+
+
+
+}
+
+
+
+vehicle serives
+
+package com.starproject.service;
+
+
+
+import java.util.ArrayList;
+
+import java.util.InputMismatchException;
+
+import java.util.List;
+
+import java.util.Scanner;
+
+import java.time.LocalDate;
+
+import com.starproject.model.*;
+
+
+
+public class VehicleServices {
+
+
+
+	private static List<Vehicle> vehicles = new ArrayList<>();
+
+
+
+	public static void createVehicleInsurance(Scanner sc, int underwriterId) {
+
+		System.out.println("=== Create New Vehicle Insurance ===");
+
+		System.out.print("Enter Vehicle Number (Alphanumeric): ");
+
+		String vehicleNo = sc.nextLine();
+
+
+
+		System.out.print("Enter Vehicle Type (2-wheeler/4-wheeler): ");
+
+		String vehicleType = sc.nextLine();
+
+
+
+		System.out.print("Enter Customer Name: ");
+
+		String coustomerName = sc.nextLine();
+
+
+
+		System.out.print("Enter Engine Number: ");
+
+		int engineNo = sc.nextInt();
+
+		sc.nextLine();
+
+		System.out.print("Enter Chassis Number: ");
+
+		int chassisNo = sc.nextInt();
+
+		sc.nextLine();
+
+
+
+		System.out.print("Enter Customer Phone Number: ");
+
+		String phoneNo = sc.nextLine();
+
+
+
+		System.out.print("Enter Policy type (Full Insurance/Third Party): ");
+
+		String type = sc.nextLine();
+
+
+
+		double premiumAmount = (type.equalsIgnoreCase("Full Insurance")) ? 5000 : 2500;
+
+		String fromDate = LocalDate.now().toString();
+
+		String toDate = LocalDate.now().plusDays(365).toString();
+
+
+
+		int policyNo = vehicles.size() + 1;
+
+		Vehicle newVehicle = new Vehicle(policyNo, vehicleNo, vehicleType, coustomerName, engineNo, chassisNo, phoneNo,
+
+				type, premiumAmount, fromDate, toDate, underwriterId);
+
+		vehicles.add(newVehicle);
+
+		System.out.println("Vehicle InsuranceCreated Successfully! Policy No: " + policyNo);
+
+
+
+	}
+
+
+
+	public static void viewPolicies(Scanner sc) {
+
+		System.out.println("\n--- View Policies ---");
+
+		System.out.println("1. View All Insurance Policies");
+
+		System.out.println("2. View Insurance by Vehicle ID");
+
+		System.out.println("3. View Insurance by Policy ID");
+
+		System.out.print("Enter your choice: ");
+
+
+
+		int choice = 0;
+
+		String errorMessage = "Invalid choice! Please select a valid option";
+
+		try {
+
+			choice = sc.nextInt();
+
+
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please select a valid option";
+
+		}
+
+		sc.nextLine();
+
+		switch (choice) {
+
+		case 1:
+
+			if (vehicles.isEmpty()) {
+
+				System.out.println("No Insurance Policies Found.");
+
+			} else {
+
+				for (Vehicle v : vehicles) {
+
+					System.out.println(v);
+
+				}
+
+			}
+
+			break;
+
+
+
+		case 2:
+
+			System.out.print("Enter Vehicle Number: ");
+
+			String vehicleNo = sc.nextLine();
+
+			boolean foundVehicle = false;
+
+			for (Vehicle v : vehicles) {
+
+				if (v.getVehicleNo().equalsIgnoreCase(vehicleNo)) {
+
+					System.out.println(v);
+
+					foundVehicle = true;
+
+				}
+
+			}
+
+			if (!foundVehicle) {
+
+				System.out.println("No Insurance Found for the Given Vehicle ID.");
+
+			}
+
+			break;
+
+
+
+		case 3:
+
+			System.out.print("Enter Policy ID: ");
+
+			int policyId = sc.nextInt();
+
+			boolean foundPolicy = false;
+
+			for (Vehicle v : vehicles) {
+
+				if (v.getPolicyNo() == policyId) {
+
+					System.out.println(v);
+
+					foundPolicy = true;
+
+				}
+
+			}
+
+			if (!foundPolicy) {
+
+				System.out.println("No Insurance Found for the Given Policy ID.");
+
+			}
+
+			break;
+
+
+
+		default:
+
+			System.out.println(errorMessage);
+
+		}
+
+	}
+
+
+
+	static void changePolicyType(Scanner sc) {
+
+		System.out.print("Enter Policy ID to Change Policy Type: ");
+
+		int policyId = 0;
+
+		String errorMessage = "Policy Id Not Found! Please try again";
+
+		try {
+
+			policyId = sc.nextInt();
+
+			sc.nextLine();
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please try again";
+
+			System.out.println(errorMessage);
+
+			sc.nextLine();
+
+			return;
+
+		}
+
+		for (Vehicle v : vehicles) {
+
+			if (v.getPolicyNo() == policyId) {
+
+				if (v.getType().equalsIgnoreCase("Third Party")) {
+
+					System.out.println("There's no provision to upgrade fromThird Party to Full Insurance.");
+
+					return;
+
+				}
+
+				System.out.print("Press 'U' to update policy from Full Insurance to Third Party: ");
+
+				char confirm = sc.next().charAt(0);
+
+				if (confirm == 'U' || confirm == 'u') {
+
+					v.setType("Third Party");
+
+					v.setPremiumAmount(2500);
+
+					System.out.println("Policy Updated Successfully! New Type: " + v.getType());
+
+
+
+				} else {
+
+					System.out.println("Invalid Choice! Policy Not Updated.");
+
+				}
+
+				return;
+
+			}
+
+		}
+
+		System.out.println(errorMessage);
+
+
+
+	}
+
+
+
+	static void renewPolicy(Scanner sc) {
+
+		System.out.print("Enter Policy ID to Renew: ");
+
+		int policyId = 0;
+
+		String errorMessage = "Policy Id Not Found! Please try again";
+
+		try {
+
+			policyId = sc.nextInt();
+
+			sc.nextLine();
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please try again";
+
+			System.out.println(errorMessage);
+
+			sc.nextLine();
+
+			return;
+
+		}
+
+		for (Vehicle v : vehicles) {
+
+			if (v.getPolicyNo() == policyId) {
+
+				System.out.println("Current Policy Details: " + v);
+
+				System.out.print("Press 'R' to renew the policy: ");
+
+				char confirm = sc.next().charAt(0);
+
+				if (confirm == 'R' || confirm == 'r') {
+
+					System.out.print("Enter New Premium Amount:");
+
+					double newPremium = sc.nextDouble();
+
+					String newFromDate = LocalDate.now().toString();
+
+					String newToDate = LocalDate.now().plusDays(365).toString();
+
+
+
+					Vehicle renewedVehicle = new Vehicle(vehicles.size() + 1, v.getVehicleNo(), v.getVehicleType(),
+
+							v.getCoustomerName(), v.getEngineNo(), v.getChassisNo(), v.getPhoneNo(), v.getType(),
+
+							newPremium, newFromDate, newToDate, v.getUnderwriterId());
+
+					vehicles.add(renewedVehicle);
+
+					System.out.println("Policy Renewed Successfully! New Policy ID: " + renewedVehicle.getPolicyNo());
+
+				} else {
+
+					System.out.println("Renewal Cancelled.");
+
+				}
+
+				return;
+
+			}
+
+		}
+
+		System.out.println(errorMessage);
+
+
+
+	}
+
+
+
+	public static void viewVehiclesByUnderWriterID(Scanner sc) {
+
+		System.out.print("Enter UnderWriter ID to view vehicles: ");
+
+		int underWriterId = 0;
+
+		String errorMessage = "Vehicle Not Found! Please try again";
+
+		try {
+
+			underWriterId = sc.nextInt();
+
+			sc.nextLine();
+
+		} catch (InputMismatchException e) {
+
+			errorMessage = "Invalid input! Please try again";
+
+			System.out.println(errorMessage);
+
+			sc.nextLine();
+
+			return;
+
+		}
+
+		for (Vehicle v : vehicles) {
+
+			if (v.getUnderwriterId() == underWriterId) {
+
+				System.out.println(v);
+
+			}
+
+		}
+
+		System.out.println(errorMessage);
+
+	}
+
+}
+
